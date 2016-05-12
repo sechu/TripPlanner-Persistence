@@ -10,9 +10,9 @@ $(function () {
     };
 
     var collections = {
-        hotel: hotels,
-        restaurant: restaurants,
-        activity: activities
+        // hotel: hotels,
+        // restaurant: restaurants,
+        // activity: activities
     };
 
     var $itinerary = $('#itinerary');
@@ -33,6 +33,20 @@ $(function () {
     END VARIABLE DECLARATIONS
     --------------------------
      */
+    function addtoCollections(type) {
+        $.ajax({
+            method: 'GET',
+            url: '/api/' + type,
+            success: function(typeData){
+                collections[type] = typeData;
+            },
+            error: console.error
+        });
+    } 
+
+    addtoCollections('hotel');
+    addtoCollections('restaurant');
+    addtoCollections('activity');
 
     $addItemButton.on('click', function () {
 
@@ -101,9 +115,9 @@ $(function () {
 
     });
 
-    fillInOptions(hotels, $('#hotel-choices'));
-    fillInOptions(restaurants, $('#restaurant-choices'));
-    fillInOptions(activities, $('#activity-choices'));
+    fillInOptions(collections.hotel, $('#hotel-choices'));
+    fillInOptions(collections.restaurant, $('#restaurant-choices'));
+    fillInOptions(collections.activity, $('#activity-choices'));
 
     /*
     --------------------------
