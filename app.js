@@ -2,10 +2,9 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var swig = require('swig');
-
 var db = require('./models');
-
 var app = express();
+var apiRouter = require('./routes/api/attractions');
 
 // swig rendering boilerplate
 app.set('views', __dirname + '/views');
@@ -25,6 +24,7 @@ app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static(__dirname + '/public'));
 
 // serve dynamic routes
+app.use('/api', apiRouter);
 app.use(require('./routes'));
 
 // failed to catch req above means 404, forward to error handler
