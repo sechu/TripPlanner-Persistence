@@ -9,7 +9,7 @@ $(function () {
         activity: $('#activity-list').children('ul')
     };
 
-    var collections = {};
+   var collections = {};
 
     var $itinerary = $('#itinerary');
 
@@ -40,11 +40,18 @@ $(function () {
         
     // } 
 
+    function makeDaysButtons () {
+        $.get('/api/days')
+        .then(function(allDays) {
+            reRenderDayButtons(allDays.length);
+        })
+        .fail(console.error.bind(console));
+    }
+
     function addtoCollections(type) {
         $.get('/api/' + type)
         .then(function(typeData) {
             collections[type] = typeData;
-            fillInOptions(collections[type], $('#' + type + '-choices'));
         });
     } 
 
@@ -52,6 +59,15 @@ $(function () {
     addtoCollections('restaurant');
     addtoCollections('activity');
 
+    makeDaysButtons();
+
+    function addtoDay (num, type, item) {
+        $.post('/api/days/' + type, {
+            day: num,
+            item: item
+        });
+    }
+    
 
     $addItemButton.on('click', function () {
 
@@ -66,6 +82,8 @@ $(function () {
         var marker = drawMarker(map, sectionName, item.place.location);
 
         $list.append(create$item(item));
+
+        addtoDay(currentDayNum, sectionName, item.name );
 
         days[currentDayNum - 1].push({
             item: item,
@@ -94,6 +112,8 @@ $(function () {
     });
 
     $addDayButton.on('click', function () {
+
+
         var newDayNum = days.length + 1;
         var $newDayButton = createDayButton(newDayNum);
         days.push([]);
@@ -148,11 +168,6 @@ $(function () {
 
     // End create element functions ----
 
-    function fillInOptions(collection, $selectElement) {
-        collection.forEach(function (item) {
-            $selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
-        });
-    }
 
     function switchDay(dayNum) {
         wipeDay();
@@ -195,9 +210,7 @@ $(function () {
 
     }
 
-    function reRenderDayButtons() {
-
-        var numberOfDays = days.length;
+    function reRenderDayButtons(numberOfDays) {
 
         $dayButtonList.children('button').not($addDayButton).remove();
 
