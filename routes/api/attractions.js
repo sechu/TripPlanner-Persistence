@@ -44,54 +44,51 @@ router.post('/days/hotel', function (req, res, next) {
             }
         })
         .spread(function(day) {
-            console.log(day);
             day.setHotel(hotel);
         });
     })
     .catch(next);
 });
 
-router.post('/days/hotel', function (req, res, next) {
+router.post('/days/activity', function (req, res, next) {
     var item = req.body.item,
         day = req.body.day;
 
-    Hotel.findOne({
+    Activity.findOne({
         where: {
             name: item
         }
     })
-    .then(function (hotel) {
+    .then(function (activity) {
         return Day.findOrCreate({
             where: {
                 num: day
             }
         })
         .spread(function(day) {
-            console.log(day);
-            day.setHotel(hotel);
+            day.addActivity(activity);
         });
     })
     .catch(next);
 });
 
-router.post('/days/hotel', function (req, res, next) {
+router.post('/days/restaurant', function (req, res, next) {
     var item = req.body.item,
         day = req.body.day;
 
-    Hotel.findOne({
+    Restaurant.findOne({
         where: {
             name: item
         }
     })
-    .then(function (hotel) {
+    .then(function (restaurant) {
         return Day.findOrCreate({
             where: {
                 num: day
             }
         })
         .spread(function(day) {
-            console.log(day);
-            day.setHotel(hotel);
+            day.addRestaurant(restaurant);
         });
     })
     .catch(next);

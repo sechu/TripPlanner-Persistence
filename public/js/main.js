@@ -114,7 +114,7 @@ $(function () {
     $addDayButton.on('click', function () {
 
 
-        var newDayNum = days.length + 1;
+        var newDayNum = $('.day-buttons').children().length;
         var $newDayButton = createDayButton(newDayNum);
         days.push([]);
         $addDayButton.before($newDayButton);
