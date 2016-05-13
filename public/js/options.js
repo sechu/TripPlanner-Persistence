@@ -14,9 +14,7 @@ $(function() {
 
     addtoCollections('hotel');
     addtoCollections('restaurant');
-    addtoCollections('activity');
-
-    
+    addtoCollections('activity');    
 });   
 
    

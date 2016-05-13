@@ -24,26 +24,19 @@ $(function () {
 
     var currentDayNum = 1;
 
+    var currentItinerary = []; //[{type, name, marker}];
+
     /*
     --------------------------
     END VARIABLE DECLARATIONS
     --------------------------
      */
-    // function addtoCollections(type) {
-    //     $.get('/api/' + type, function(typeData){
-    //         console.log(typeData);
-    //         collections[type] = typeData;
-    //     })
-    //     .then(function() {
-    //         fillInOptions(collections[type], $('#' + type + '-choices'));
-    //     });
-        
-    // } 
+
 
     function makeDaysButtons () {
         $.get('/api/days')
-        .then(function(allDays) {
-            reRenderDayButtons(allDays.length);
+        .then(function(numDays) {
+            reRenderDayButtons(numDays);
         })
         .fail(console.error.bind(console));
     }
@@ -141,7 +134,6 @@ $(function () {
     });
 
    
-
     /*
     --------------------------
     END NORMAL LOGIC
@@ -151,14 +143,12 @@ $(function () {
     // Create element functions ----
 
     function create$item(item) {
-
-        var $div = $('<div />');
-        var $span = $('<span />').text(item.name);
+        var $li = $('<li />');
+        var $div = $('<div />').addClass('itinerary-item');
+        var $span = $('<span />').text(item).addClass("title");
         var $removeButton = $('<button class="btn btn-xs btn-danger remove btn-circle">x</button>');
 
-        $div.append($span).append($removeButton);
-
-        return $div;
+        return $li.append($div.append($span).append($removeButton))
 
     }
 
@@ -177,20 +167,40 @@ $(function () {
         mapFit();
     }
 
-    function renderDay() {
+    function makeItinerary(dayNum) {
+        return $.get('/api/days/'+dayNum)
+        .then(function(itinerary) {
+            for (var type in itinerary) {
+                var attraction = itinerary[type];
+                attraction.forEach(function(item) {
+                    currentItinerary.push({
+                        type: type,
+                        name: item.name,
+                        marker: drawMarker(map, type, item.place.location)
+                    });
 
-        var currentDay = days[currentDayNum - 1];
+                })
+            }
+        })
+        .fail();
+    }
+
+    makeItinerary(1)
+    .then(function() {
+        renderDay(1);
+    });
+
+    function renderDay(num) {
 
         $dayButtonList
-            .children('button')
-            .eq(currentDayNum - 1)
-            .addClass('current-day');
+        .children('button')
+        .eq(num)
+        .addClass('current-day');
 
-        currentDay.forEach(function (attraction) {
+        currentItinerary.forEach(function(attraction) {
             var $listToAddTo = $listGroups[attraction.type];
-            $listToAddTo.append(create$item(attraction.item));
-            attraction.marker.setMap(map);
-        });
+            $listToAddTo.append(create$item(attraction.name));
+        })
 
     }
 

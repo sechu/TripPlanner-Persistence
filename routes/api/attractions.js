@@ -9,9 +9,9 @@ var Day = require('../../models/day');
 var Promise = require('bluebird');
 
 router.get('/days', function (req, res, next) {
-    Day.findAll()
-    .then(function (allDays) {
-        res.send(allDays);
+    Day.count()
+    .then(function (count) {
+        res.send(count.toString());
     })
     .catch(next);
 });
@@ -22,8 +22,11 @@ router.get('/days/:num', function (req, res, next) {
             num: req.params.num
         }
     })
-    .then(function (oneDay) {
-        res.send(oneDay);
+    .then(function (day) {
+        return day.returnItinerary();
+    })
+    .then(function(itinerary) {
+        res.send(itinerary);
     })
     .catch(next);
 });
@@ -98,7 +101,6 @@ router.post('/days/restaurant', function (req, res, next) {
 router.get('/:attraction', function (req, res, next) {
 
     var attraction = req.params.attraction;
-    console.log(attraction);
 
     db.model(attraction).findAll({
         include: [Place]
