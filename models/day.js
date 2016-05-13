@@ -9,6 +9,25 @@ var Day = db.define('day', {
   	type: Sequelize.INTEGER,
   }
 }, {
+	classMethods: {
+		resetDays: function(deletedDayNum){
+			return Day.findAll({
+				where: {
+					num: {
+						gt: deletedDayNum
+					}
+				}	
+			})
+			.then(function(daysArray) {
+				console.log(daysArray);
+				daysArray.forEach(function(day) {
+					day.num -= 1;
+					day.save();
+				});
+			})
+			.catch(console.error);
+		}
+	},
 	instanceMethods: {
 		returnItinerary: function() {
 			return Promise.all([

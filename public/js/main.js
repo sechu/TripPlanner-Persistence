@@ -104,6 +104,12 @@ $(function () {
     });
 
     $removeDayButton.on('click', function () {
+        
+
+        $.get('/api/days/delete/' + currentDay)
+        .then(function() {
+            
+        })
 
         wipeDay();
         // days.splice(currentDayNum - 1, 1);
@@ -113,8 +119,6 @@ $(function () {
         // }
 
         reRenderDayButtons();
-        switchDay(1);
-
     });
 
    

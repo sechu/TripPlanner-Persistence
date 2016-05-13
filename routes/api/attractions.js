@@ -97,6 +97,21 @@ router.post('/days/restaurant', function (req, res, next) {
     .catch(next);
 });
 
+router.get('/days/delete/:num', function (req, res, next) {
+    Day.destroy({
+        where: {
+            num: req.params.num
+        }
+    })
+    .then(function() {
+       return Day.resetDays(req.params.num);
+    })
+    .then(function() {
+        res.send();
+    })
+    .catch(next);
+});
+
 router.get('/location', function (req, res, next) {
     var type = req.query.type;
     var name = req.query.name;
