@@ -108,7 +108,8 @@ $(function () {
 
         $.get('/api/days/delete/' + currentDay)
         .then(function() {
-            switchDay(currentDay - 1);
+            if (currentDay ===1) switchDay(currentDay);
+            else switchDay(currentDay - 1);
             makeDaysButtons();
         })
         .fail(console.error.bind(console));
@@ -199,7 +200,6 @@ $(function () {
             attraction.marker.setMap(null);
         });
 
-
     }
 
     function reRenderDayButtons(numberOfDays) {
@@ -223,6 +223,5 @@ $(function () {
         map.fitBounds(bounds);
 
     }
-
 
 });

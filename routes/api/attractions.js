@@ -69,8 +69,11 @@ router.post('/days/activity', function (req, res, next) {
             }
         })
         .spread(function(day) {
-            day.addActivity(activity);
-        });
+            return day.addActivity(activity);
+        })
+    })
+    .then(function(){
+        res.end();
     })
     .catch(next);
 });
@@ -91,8 +94,11 @@ router.post('/days/restaurant', function (req, res, next) {
             }
         })
         .spread(function(day) {
-            day.addRestaurant(restaurant);
-        });
+            return day.addRestaurant(restaurant);
+        })
+    })
+    .then(function() {
+        res.end();
     })
     .catch(next);
 });
