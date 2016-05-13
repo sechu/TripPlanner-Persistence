@@ -57,8 +57,9 @@ $(function () {
 
         addtoDay(currentDay, type, item)
         .then(function() {
-            renderDay();
+            switchDay(currentDay);
         })
+        .fail(console.error.bind(console));
         // $.get('/api/location?type='+type+'&name='+item)
         // .then(function(location) {
         //     currentItinerary.push({
@@ -68,7 +69,6 @@ $(function () {
         //     })
         // })    
         
-        mapFit();
 
     });
 
@@ -108,17 +108,10 @@ $(function () {
 
         $.get('/api/days/delete/' + currentDay)
         .then(function() {
-            
+            switchDay(currentDay - 1);
+            makeDaysButtons();
         })
-
-        wipeDay();
-        // days.splice(currentDayNum - 1, 1);
-
-        // if (days.length === 0) {
-        //     days.push([]);
-        // }
-
-        reRenderDayButtons();
+        .fail(console.error.bind(console));
     });
 
    
@@ -155,7 +148,7 @@ $(function () {
         renderDay()
         .then(function() {
             mapFit();
-        }) 
+        }); 
     }
 
     function makeItinerary(dayNum) {
@@ -180,7 +173,7 @@ $(function () {
 
 
     function renderDay() {
-        makeItinerary(currentDay)
+        return makeItinerary(currentDay)
         .then(function() {
             currentItinerary.forEach(function(attraction) {
                 var $listToAddTo = $listGroups[attraction.type];
