@@ -17,12 +17,12 @@ router.get('/days', function (req, res, next) {
 });
 
 router.get('/days/:num', function (req, res, next) {
-    Day.findOne({
+    Day.findOrCreate({
         where: {
             num: req.params.num
         }
     })
-    .then(function (day) {
+    .spread(function (day) {
         return day.returnItinerary();
     })
     .then(function(itinerary) {
@@ -95,6 +95,21 @@ router.post('/days/restaurant', function (req, res, next) {
         });
     })
     .catch(next);
+});
+
+router.get('/location', function (req, res, next) {
+    var type = req.query.type;
+    var name = req.query.name;
+
+    db.model(type).findOne({
+        include: [Place]
+    })
+    .then(function (attraction) {
+        var location = attraction.place.location;
+        res.send(location);
+    })
+    .catch(next);
+
 });
 
 

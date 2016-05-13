@@ -1,7 +1,7 @@
 $(function() {
     function fillInOptions(collection, $selectElement) {
         collection.forEach(function (item) {
-            $selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
+            $selectElement.append('<option>' + item.name + '</option>');
         });
     }
 
